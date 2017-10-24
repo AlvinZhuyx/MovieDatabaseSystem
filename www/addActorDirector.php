@@ -51,7 +51,7 @@
 			 $berror = "Date of birth should not be blank";
 			 $rerror = 1;
 		 }
-		 if (!empty($_POST["dod"])){
+		 if (!empty($_POST["dod"])){			 
 		     $dod = $_POST["dod"];
 		 }
 		 else{
@@ -88,15 +88,15 @@
 	  <span class = "requirement">*<?php print "$gerror";?></span>
 	  </br></br>
 	  Date of Birth</br>
-	  <input type = "date" name = "dob">
+	  <input type = "text" name = "dob">
 	  <span class = "requirement">*<?php print "$berror";?></span>
 	  </br>
-	  <span class = "reminder">according to your browser, choose the date or enter like 19940608</span>
+	  <span class = "reminder">please enter date like 1994-06-08</span>
 	  </br></br>
 	  Date of Death</br>
-	  <input type = "date" name = "dod">
+	  <input type = "text" name = "dod">
 	  </br>
-	  <span class = "reminder">please leave here blank if this person is still alive</span>
+	  <span class = "reminder">please enter date like 1994-06-08 and leave here blank if this person is still alive</span>
 	  </br></br>
 	  <input type="submit" name="submit" value="Add!">
 </form>
@@ -123,7 +123,12 @@
 		 $row = mysql_fetch_row($rs);
 		 $id = $row[0] + 1;
          
-		 $query = "insert into $profession values($id, '$lastname', '$firstname', '$gender', $dob, $dod);";
+		 if ($dod == "NULL"){
+			  $query = "insert into $profession values($id, '$lastname', '$firstname', '$gender', '$dob', NULL);";
+		 }
+	     else{
+		      $query = "insert into $profession values($id, '$lastname', '$firstname', '$gender', '$dob', '$dod');";
+		 }
 		 mysql_query($query, $db_connection);
 		 $error = mysql_error();
 		 if ($error != '')
