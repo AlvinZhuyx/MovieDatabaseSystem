@@ -39,7 +39,6 @@ h1 { text-align:center;}
 		
 		$mid = $_GET["mid"];
 		if (empty($mid)){
-			print 'Mid can not be null.';
 			exit(1);
 		}
 
