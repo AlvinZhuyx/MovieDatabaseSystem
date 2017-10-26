@@ -36,7 +36,6 @@ h2 { text-align:center;}
 		
 		$aid = $_GET["aid"];
 		if (empty($aid)){
-			print 'Aid can not be null.';
 			exit(1);
 		}
 		
