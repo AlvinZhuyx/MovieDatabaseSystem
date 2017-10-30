@@ -1,17 +1,16 @@
 <html>
 <head>
-<title>Show movie information</title>
+<title>Show Movie Information</title>
 <style>
-h2 { text-align:center;}
-.requirement{color:red; font-size:x-small}
+h1 { text-align:center;}
+.requirement{color:red; font-size:small}
 </style>
 </head>
 
 <body>
+<br><p><h1>Actor Information Page</h1></p><br>
 
-
-<p><h2>You can search information for Movie, Actor here!</h2></p>
-<form method = "POST" action = "./search.php">
+<form method = "GET" action = "./search.php">
 <input type = "text" name = "search" size = 150px>
 <span class = "requirement"><?php print "$serror"; ?></span>
 </br></br>
@@ -23,7 +22,7 @@ h2 { text-align:center;}
 	    $db_connection = mysql_connect("localhost", "cs143", "");
 	    $error = mysql_error();
 	    if ($error != ''){
-		    print '<p class = "error">Connection failed: '. error.'</p>';
+		    print '<p class = "error">Connection failed: '. $error.'</p>';
 		    exit(1);
 	    }
 		 
@@ -36,6 +35,7 @@ h2 { text-align:center;}
 		
 		$aid = $_GET["aid"];
 		if (empty($aid)){
+			//print 'Aid can not be null.';
 			exit(1);
 		}
 		
@@ -48,10 +48,10 @@ h2 { text-align:center;}
 		$rs = mysql_query($query, $db_connection);
         print '<h4>Actor Information: </h4>';
 		print '<table border = "1"><tr>';
-		print '<td>name</td>';
-		print '<td>gender</td>';
-		print '<td>date of birth</td>';
-		print '<td>date of death</td>';
+		print '<td>Name</td>';
+		print '<td>Gender</td>';
+		print '<td>Date of Birth</td>';
+		print '<td>Date of Death</td>';
 	    print '</tr>';
 		while($row =  mysql_fetch_assoc($rs))
 		{
@@ -79,11 +79,11 @@ h2 { text-align:center;}
 		$rs = mysql_query($query, $db_connection);
         print '<h4>Related movies: </h4>';
 		print '<table border = "1"><tr>';
-		print '<td>title</td>';
-		print '<td>year</td>';
+		print '<td>Title</td>';
+		print '<td>Year</td>';
 		print '<td>MPAA rating</td>';
-		print '<td>company</td>';
-		print '<td>role</td>';
+		print '<td>Company</td>';
+		print '<td>Role</td>';
 	    print '</tr>';
 		while($row =  mysql_fetch_assoc($rs))
 		{
@@ -99,8 +99,5 @@ h2 { text-align:center;}
 		
 	  }
 ?>
-
-
-
 </body>
 </html>

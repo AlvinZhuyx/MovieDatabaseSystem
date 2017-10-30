@@ -2,7 +2,7 @@
 <head>
 <title>search movie or person here</title>
 <style>
-h2 { text-align:center;}
+h1 { text-align:center;}
 .requirement{color:red; font-size:x-small}
 </style>
 </head>
@@ -11,33 +11,34 @@ h2 { text-align:center;}
 
 <?php
      $rerror = 0;
-     if ($_SERVER["REQUEST_METHOD"] == "POST")
+     if ($_SERVER["REQUEST_METHOD"] == "GET")
 	 {
-		 if (!empty($_POST["search"])){
-			 $search = $_POST["search"];
+		 if (!empty($_GET["search"])){
+			 $search = $_GET["search"];
 			 $serror = "";		
 		 }
 		 else{
-			 $serror = "Please enter the search condition";
+			 //$serror = "Please enter the search condition";
 			 $rerror = 1;
 	     }
 	 }
 ?>
-
-<p><h2>You can search information for Movie, Actor here!</h2></p>
-<form method = "POST" action = "">
-<input type = "text" name = "search" size = 150px>
-<span class = "requirement"><?php print "</br>$serror"; ?></span>
+<br>
+<p><h1>You can search information for Movie, Actor here!</h1></p>
+<br>
+<form method = "GET" action = "">
+<input type = "text" name = "search" size = 150px placeholder="Search...">
+<span class = "requirement"><?php print "$serror"; ?></span>
 </br></br>
 <input type = "submit" name = "submit" value = "Search!">
 </form>
  
 <?php
-     if($rerror == 0 and $_SERVER["REQUEST_METHOD"] == "POST"){
+     if($rerror == 0 and $_SERVER["REQUEST_METHOD"] == "GET"){
 	    $db_connection = mysql_connect("localhost", "cs143", "");
 	    $error = mysql_error();
 	    if ($error != ''){
-		    print '<p class = "error">Connection failed: '. error.'</p>';
+		    print '<p class = "error">Connection failed: '. $error.'</p>';
 		    exit(1);
 	    }
 		// actor list:
@@ -52,6 +53,8 @@ h2 { text-align:center;}
 		$wordlist = explode(' ', strtolower($search));
 		$length = count($wordlist);
 		$searchActor = 'select id, concat_ws(" ", first, last) as name, dob, sex from Actor where 1';
+		
+		/*search for director can be add here;*/
 		
 		for ($i = 0; $i < $length; $i++)
 		{

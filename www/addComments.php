@@ -7,19 +7,57 @@
   .error{color:red; font-size:x-large; font-weight:bold}
   </style> 
 </head>
+<h2>Please add the comments here! </h2>
 
 <body>
-<form method = "POST" action = "">
-	<h2>Please add the comments here! </h2>
+<form method = "GET" action = ""><br>
+	<span class = "reminder">Don't know the exact name of the movie?</span>
+	<br>
+	<span class = "reminder">No worry, just type in what you know, and select in the box below!</span>
+	<br>
+	<br>Search Movie:<br>
+	<input type = "text" name = "searchMovie">
+	<input type = "submit" name = "submitMovie" value = "show results">
+	<?php
+		$movie = $_GET["searchMovie"];
+		if($movie != ""){
+			$db_connection = mysql_connect("localhost", "cs143", "");
+			
+			mysql_select_db("CS143", $db_connection);
+			$queryMovie = "select id, title, year from Movie where title like \"%$movie%\" order by title;";
+			$resMovie = mysql_query($queryMovie, $db_connection);
+		}
+	?>
+</form>
+
+
+
+<form method = "POST" action = "addComments.php">
+	
 	<span class = "requirement"> required information*</span><br>
-	<br>Movie id<br>
-	<input type = "text" name = "mid">
+	<br>Choose Movie<br>
+	<select class="form-control" name = "mid">
+		<?php
+			while($row = mysql_fetch_assoc($resMovie))
+				echo '<option value=' . $row['id'] .'>'.$row['title'].'('.$row['year'].')</option>';
+		?>
+	</select>
 	<span class = "requirement">*</span><br>
 
 	<br>Rating<br>
-	<input type = "number" name = "rating">
-	<span class = "requirement">*</span>
-	<br><span class = "reminder"> Any integer from 0 to 100<br></span>
+	<select name = "rating">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+	</select>
+	<span class = "requirement">*</span><br>
 
 	<br>Comment<br>
 	<input type = "text" name = "comment">
@@ -29,9 +67,8 @@
 	<br><br>
 
 	<input type = "submit" name = "submit" value = "Add!">
-</body>
 </form>
-
+</body>
 
 <?php
 	#required fields:
@@ -46,13 +83,13 @@
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$timeStamp = date('Y-m-d G:i:s');
 		
-		if(!empty($_POST["mid"]))
+		//if(!empty($_GET["mid"]))
 			$mid = $_POST["mid"];
-		else{
-			$error = 1;
-			print 'Please specify the Movie id<br>';
-			exit(1);
-		}
+		//else{
+		//	$error = 1;
+		//	print 'Please specify the Movie id<br>';
+		//	exit(1);
+		//}
 		
 		if(!empty($_POST["userName"]))
 			$userName = $_POST["userName"];
@@ -70,17 +107,13 @@
 	}
 
 	if($error == 0 && $_SERVER["REQUEST_METHOD"] == "POST"){
-		$db = mysql_connect("localhost", "cs143", ""); 
-		if(!$db)
-			die("Unable to connect database " . mysql_error());
-		//select database CS143
-		$db_CS143 = mysql_select_db("CS143", $db);
-		if(!$db_CS143)
-			die("Unable to select database CS143 " . mysql_error());
 		$query = "insert into Review
-					values('$userName', '$timeStamp', $mid, $rating, '$comment')";
-		$res = mysql_query($query, $db);
-		mysql_close($db);
+					values(\"$userName\", \"$timeStamp\", $mid, $rating, \"$comment\");";
+		$db_connection = mysql_connect("localhost", "cs143", "");
+		mysql_select_db("CS143", $db_connection);
+		//print $query;
+		$res = mysql_query($query, $db_connection) or print 'Fail<br>';
+		mysql_close($db_connection);
 		print 'Success!<br>';
 	}
 ?>

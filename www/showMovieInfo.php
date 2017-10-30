@@ -8,25 +8,21 @@ h1 { text-align:center;}
 </head>
 
 <body>
-
 <br><p><h1>Movie Information Page</h1></p><br>
 
-<form method = "POST" action = "./search.php">
+<form method = "GET" action = "./search.php">
 <input type = "text" name = "search" size = 150px>
 <span class = "requirement"><?php print "$serror"; ?></span>
 </br></br>
 <input type = "submit" name = "submit" value = "Search!">
 
-
+</form>
 <?php
-	//TODO:
-	//86~91 part B, part C
-
 	if($_SERVER["REQUEST_METHOD"] == "GET"){
 	    $db_connection = mysql_connect("localhost", "cs143", "");
 	    $error = mysql_error();
 	    if ($error != ''){
-		    print '<p class = "error">Connection failed: '. error.'</p>';
+		    print '<p class = "error">Connection failed: '. $error.'</p>';
 		    exit(1);
 	    }
 		 
@@ -39,6 +35,7 @@ h1 { text-align:center;}
 		
 		$mid = $_GET["mid"];
 		if (empty($mid)){
+			//print 'Mid can not be null.';
 			exit(1);
 		}
 
@@ -88,7 +85,12 @@ h1 { text-align:center;}
 	    }
 		$res = mysql_query($query, $db_connection);
 		$row = mysql_fetch_row($res);
-		print "Genre: $row[0]<br>"; 
+		print "Genre: $row[0]";
+		while($row = mysql_fetch_row($res)){
+			print ", $row[0]";
+		}
+		print "<br>";
+		
 		//B: actors in the movie
 		# role | movie title
 		print '<h2>Actors in this Movie: </h2>';
@@ -116,6 +118,14 @@ h1 { text-align:center;}
 
 		//C: User Reviews:
 		print '<h2>User Reviews: </h2>';
+		$query = 'select avg(rating) as score, count(rating) as num from Review where mid = ' .$mid.';';
+		$res = mysql_query($query, $db_connection);	
+		while($row = mysql_fetch_assoc($res)){
+			print 'Average score for this movie is '.$row["score"] . ' based on '. $row["num"] .' reviews.';
+			print '<br><br>';
+		}
+		
+
 		$query = 'select name, rating, time, comment
 					from Review where mid =' .$mid.';';
 		if ($error != ''){
